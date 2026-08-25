@@ -1,0 +1,32 @@
+DISPBLIT.R4D 0.1.0
+==================
+
+Aufgabe und Besitz
+------------------
+DISPBLIT ist ein externer Display-Treiber fuer den synchronen XRGB32-
+Blitvertrag von DriverApi v22. Der Kernel behaelt Displayziel, Mapping,
+Damagevalidierung, Fence, Statistiken und den sicheren Bootframebuffer-
+Fallback. Der Treiber erhaelt Ziel, Quelle und bis zu acht Regionen nur fuer
+die Dauer eines Callbacks und darf keine Adresse behalten.
+
+Kopierpfad
+----------
+Jede Zeile wird in Acht-Pixel-Vektoren und einem skalaren Rest kopiert. Die
+Regionen besitzen getrennte Quell- und Zielkoordinaten sowie explizite
+Strides. Vor dem ersten sichtbaren Schreibzugriff validiert der Treiber den
+gesamten Job erneut. Ein SFENCE schliesst Write-Combining-Schreibfolgen vor
+der synchronen Rueckgabe ab.
+
+Abnahme und Fehler
+------------------
+Vor der Registrierung laeuft ein RAM-Selbsttest mit zwei weit getrennten
+Regionen, unterschiedlichen Quellkoordinaten und Sentinelwerten ausserhalb
+des Damage. Nur nach exaktem Ergebnis meldet das Modul SELF_TESTED. Gibt der
+Callback spaeter einen Fehler zurueck, kopiert der Kernel dieselbe vollstaendig
+vorvalidierte Generation ueber den CPU-Fallback; partielle Backend-Ergebnisse
+werden daher nie als erfolgreicher Fence gemeldet.
+
+Build:
+
+    Build.bat
+    ./Build.sh

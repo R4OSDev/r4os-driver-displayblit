@@ -1,0 +1,24 @@
+.{
+    .name = .r4os_driver_display_blit,
+    .version = "0.1.0",
+    .fingerprint = 0xdc99ef2072494308,
+    .minimum_zig_version = "0.16.0",
+    .dependencies = .{
+        .r4os_sdk = .{
+            .url = "https://github.com/R4OSDev/r4os-sdk/archive/74d2e31dfbcf2bb8531cac44f91200f5c31947b4.tar.gz",
+            .hash = "r4os_sdk-0.64.17-NnPzAolu7gDVNAakB-ik3ZS5kDAE9nC-0AUv4_aIqe2H",
+        },
+    },
+    .paths = .{
+        "LICENSE",
+        "NOTICE",
+        "README.md",
+        "DOCUMENTATION.de.txt",
+        "THIRD_PARTY_NOTICES.md",
+        "build.zig",
+        "build.zig.zon",
+        "src",
+        "module.R4MF",
+        "PROVENANCE.txt",
+    },
+}

@@ -1,0 +1,5 @@
+DISPBLIT.R4D provenance
+=======================
+
+The implementation is original R4OS material created for release 0.69.48.
+No source code or binary material was transferred from an external project.
