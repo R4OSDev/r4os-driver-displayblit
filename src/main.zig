@@ -19,12 +19,12 @@ var backend = r4os.abi.DisplayBlitBackend{
 };
 
 comptime {
-    asm (r4os.r4dev.driverEntriesAsm("display_blit_init", "display_blit_shutdown"));
+    if (!@import("builtin").is_test) asm (r4os.technical2.driverEntriesAsm("display_blit_init", "display_blit_shutdown"));
 }
 
-export fn display_blit_init(api: *const r4os.r4dev.DriverApi) callconv(.c) i32 {
-    var ctx = r4os.r4dev.DriverContext.init(api);
-    if (!ctx.apiCompatible()) {
+export fn display_blit_init(api: *const r4os.r4dev.DriverApi2) callconv(.c) i32 {
+    var ctx = r4os.r4dev.DriverContext2.init(api);
+    if (!ctx.requires(.{"register_display_blit_backend", "unregister_display_blit_backend"})) {
         ctx.logError("DISPBLIT.R4D driver api mismatch");
         return -1;
     }
@@ -164,13 +164,13 @@ fn selfTest() bool {
     return true;
 }
 
-fn driverApi() ?*const r4os.r4dev.DriverApi {
+fn driverApi() ?*const r4os.r4dev.DriverApi2 {
     // The R4D entry ABI passes the stable table once. Keeping the pointer is
     // permitted for the resident lifetime and avoids any second ownership.
     return saved_api;
 }
 
-var saved_api: ?*const r4os.r4dev.DriverApi = null;
+var saved_api: ?*const r4os.r4dev.DriverApi2 = null;
 
 comptime {
     _ = &presents;
