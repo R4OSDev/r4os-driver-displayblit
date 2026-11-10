@@ -15,7 +15,7 @@ Build with `Build.bat` on Windows or `./Build.sh` on Linux. The canonical
 artifact declaration is `module.R4MF`.
 
 API-Migration 0.90.53: DisplayBlit 0.1.1
-Aktueller Einstieg DriverInit2/DriverApi2/Query2:2 mit SDK194/Contract93.
+Aktueller Einstieg DriverInit2/DriverApi2/Query2:2 mit SDK195/Contract93.
 Die technischen API2-Callbacks werden wirklich ueber die neue Tabelle
 aufgerufen; eigenstaendige Grafik-/Memory-/Thread-/Resource-Records
 behalten ihre eigene Revision1. Alte DriverApi-Versionszahlen in den
