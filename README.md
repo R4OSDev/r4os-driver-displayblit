@@ -6,8 +6,8 @@ into the kernel-owned boot framebuffer using eight-pixel vector batches and a
 scalar tail.
 
 The driver owns no framebuffer mapping, source buffer, fence, or persistent
-raster resource. It self-tests separated damage regions and untouched
-sentinels before registration. The kernel validates every complete job again
+raster resource. The explicit DISPLAYD /BLITCHECK diagnostic exercises the registered callback
+on 96 private pixels, including both copied regions and every untouched pixel. The kernel validates every complete job again
 and falls back to its safe CPU copy if the backend is absent, unsupported, or
 returns an error.
 

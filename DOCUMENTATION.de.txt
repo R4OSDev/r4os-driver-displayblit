@@ -19,9 +19,10 @@ der synchronen Rueckgabe ab.
 
 Abnahme und Fehler
 ------------------
-Vor der Registrierung laeuft ein RAM-Selbsttest mit zwei weit getrennten
-Regionen, unterschiedlichen Quellkoordinaten und Sentinelwerten ausserhalb
-des Damage. Nur nach exaktem Ergebnis meldet das Modul SELF_TESTED. Gibt der
+Beim Laden prüft der Treiber die API und registriert den synchronen Kopierpfad.
+DISPLAYD /BLITCHECK ruft diesen Backendpfad mit zwei getrennten Rechtecken auf.
+Die Diagnose vergleicht 25 geänderte und alle 71 unberührten RAM-Pixel.
+Der Kernel setzt SELF_TESTED nach Erfolg für die geprüfte Registrierung. Gibt der
 Callback spaeter einen Fehler zurueck, kopiert der Kernel dieselbe vollstaendig
 vorvalidierte Generation ueber den CPU-Fallback; partielle Backend-Ergebnisse
 werden daher nie als erfolgreicher Fence gemeldet.

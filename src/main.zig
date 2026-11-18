@@ -12,7 +12,6 @@ var pixels_presented: u64 = 0;
 var backend = r4os.abi.DisplayBlitBackend{
     .flags = r4os.abi.display_blit_backend_flag_xrgb32 |
         r4os.abi.display_blit_backend_flag_synchronous |
-        r4os.abi.display_blit_backend_flag_self_tested |
         r4os.abi.display_blit_backend_flag_cpu_fast_copy,
     .max_regions = max_regions,
     .present = present,
@@ -28,11 +27,6 @@ export fn display_blit_init(api: *const r4os.r4dev.DriverApi2) callconv(.c) i32 
         ctx.logError("DISPBLIT.R4D driver api mismatch");
         return -1;
     }
-    saved_api = api;
-    if (!selfTest()) {
-        ctx.logError("DISPBLIT.R4D bounded copy self-test failed");
-        return -2;
-    }
     presents = 0;
     regions_presented = 0;
     pixels_presented = 0;
@@ -41,8 +35,9 @@ export fn display_blit_init(api: *const r4os.r4dev.DriverApi2) callconv(.c) i32 
         ctx.logError("DISPBLIT.R4D backend registration failed");
         return result;
     }
+    saved_api = api;
     registered = true;
-    ctx.logInfo("DISPBLIT.R4D ready: xrgb32 regions=8 sync-fence selftest=OK");
+    ctx.logInfo("DISPBLIT.R4D ready: xrgb32 regions=8 sync-fence");
     return 0;
 }
 
@@ -124,44 +119,6 @@ fn copyRegion(
         }
         while (x < region.w) : (x += 1) target[target_row + x] = source[source_row + x];
     }
-}
-
-fn selfTest() bool {
-    var source: [96]u32 align(32) = undefined;
-    var target: [96]u32 align(32) = .{0xA5A5_A5A5} ** 96;
-    for (&source, 0..) |*pixel, index| pixel.* = 0x1100_0000 | @as(u32, @intCast(index));
-    const regions = [_]r4os.abi.DisplayBlitRegion{
-        .{ .dst_x = 2, .dst_y = 1, .src_x = 5, .src_y = 0, .w = 10, .h = 2 },
-        .{ .dst_x = 20, .dst_y = 2, .src_x = 1, .src_y = 2, .w = 5, .h = 1 },
-    };
-    const job = r4os.abi.DisplayBlitJob{
-        .target_address = @intFromPtr(&target),
-        .target_width = 32,
-        .target_height = 3,
-        .target_pitch_pixels = 32,
-        .source_pixel_count = source.len,
-        .source_address = @intFromPtr(&source),
-        .source_stride_pixels = 32,
-        .region_count = regions.len,
-        .regions_address = @intFromPtr(&regions),
-    };
-    if (present(0, &job) != 0) return false;
-    var y: usize = 0;
-    while (y < 3) : (y += 1) {
-        var x: usize = 0;
-        while (x < 32) : (x += 1) {
-            const first = y >= 1 and y < 3 and x >= 2 and x < 12;
-            const second = y == 2 and x >= 20 and x < 25;
-            const expected = if (first)
-                source[(y - 1) * 32 + 5 + (x - 2)]
-            else if (second)
-                source[2 * 32 + 1 + (x - 20)]
-            else
-                0xA5A5_A5A5;
-            if (target[y * 32 + x] != expected) return false;
-        }
-    }
-    return true;
 }
 
 fn driverApi() ?*const r4os.r4dev.DriverApi2 {
