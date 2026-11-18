@@ -10,8 +10,8 @@
             .lazy = true,
         },
         .r4os_sdk = .{
-            .url = "https://github.com/R4OSDev/r4os-sdk/archive/f3d1371434e7a7b8d10ba7f3a308790bd5ee4509.tar.gz",
-            .hash = "r4os_sdk-0.64.232-NnPzAs5tGgJYii26z6dhFB_3z3iaxHoKzbSxoG4ZHw6r",
+            .url = "https://github.com/R4OSDev/r4os-sdk/archive/0a7405664af1f563b3ccd5abd9c806c7604a39aa.tar.gz",
+            .hash = "r4os_sdk-0.64.233-NnPzAnduGgLZINU_krQ-lFIITFotJmFrBjCHb-vZM6Q4",
         },
     },
     .paths = .{
